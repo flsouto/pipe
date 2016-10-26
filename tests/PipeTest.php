@@ -1,7 +1,10 @@
 <?php
 use PHPUnit\Framework\TestCase;
+
+#mdx:h require
 require_once('vendor/autoload.php');
 
+#mdx:h use
 use FlSouto\Pipe;
 
 class PipeTest extends TestCase
@@ -9,35 +12,39 @@ class PipeTest extends TestCase
 
     function testFilter(){
 
+    	#mdx:1
     	$pipe = new Pipe();
     	$pipe->add('trim')->add(function($value){
     		return str_replace(['4','1','0'],['a','i','o'],$value);
     	});
 
     	$result = $pipe->run(' f4b10 ');
+    	#/mdx $result->output
 
         $this->assertEquals('fabio', $result->output);
     }
 
-    CONST VALIDATION_ERR = 'The value cannot contain the number 4.';
-    function addValidation(Pipe $pipe){
-    	$pipe->add(function($value){
-    		if(strstr($value,'4')){
-    			echo self::VALIDATION_ERR;
-    		}
-    	});
-    }
-
     function testValidation(){
     	$pipe = new Pipe();
-    	$this->addValidation($pipe);
+    	$pipe->add(function($value){
+    		if(strstr($value,'4')){
+    			echo 'The value cannot contain the number 4.';
+    		}
+    	});
+    	
     	$result = $pipe->run('f4b10');
-    	$this->assertEquals(self::VALIDATION_ERR, $result->error);
+
+    	$this->assertEquals('The value cannot contain the number 4.', $result->error);
     }
 
     function testValidation2(){
-    	$pipe = new Pipe();
-    	$this->addValidation($pipe);
+		$pipe = new Pipe();
+    	$pipe->add(function($value){
+    		if(strstr($value,'4')){
+    			echo 'The value cannot contain the number 4.';
+    		}
+    	});
+    
     	$result = $pipe->run('fab10');
     	$this->assertEmpty($result->error);
     }
@@ -47,7 +54,11 @@ class PipeTest extends TestCase
     	$pipe->add(function($value){
     		return str_replace('4','a',$value);
     	});
-    	$this->addValidation($pipe);
+    	$pipe->add(function($value){
+    		if(strstr($value,'4')){
+    			echo 'The value cannot contain the number 4.';
+    		}
+    	});
     	$result = $pipe->run('f4b10');
     	$this->assertEmpty($result->error);
     }
@@ -55,8 +66,12 @@ class PipeTest extends TestCase
     function testFallbackIsReturnedOnError(){
     	$pipe = new Pipe();
     	$pipe->fallback('default');
-    	$this->addValidation($pipe);
-    	$result = $pipe->run('f4b10');
+    	$pipe->add(function($value){
+    		if(empty($value)){
+    			echo 'The value cannot be blank.';
+    		}
+    	});
+    	$result = $pipe->run('');
     	$this->assertEquals('default',$result->output);
     }
 
