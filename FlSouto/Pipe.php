@@ -7,12 +7,22 @@ class Pipe{
 	protected $filters = [];
 	protected $fallback = null;
 
+	function __construct(array $filters=[]){
+		if(!empty($filters)){
+			$this->addArray($filters);
+		}
+	}
+
 	function add($filter){
 		if(!is_callable($filter)){
 			throw new InvalidArgumentException("Pipe filter must be a callable.");
 		}
 		$this->filters[] = $filter;
 		return $this;
+	}
+
+	function filters(){
+		return $this->filters;
 	}
 
 	function fallback($value){
@@ -37,6 +47,16 @@ class Pipe{
 			}
 		}
 		return $result;
+	}
+
+	function addArray(array $array){
+		foreach($array as $filter){
+			$this->add($filter);
+		}
+	}
+
+	static function create(array $filters=[]){
+		return new static($filters);
 	}
 
 }
