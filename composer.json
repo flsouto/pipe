@@ -1,0 +1,17 @@
+{
+    "name": "flsouto/pipe",
+    "description": "apply a chain of filters and validations to input data",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Fabio Souto",
+            "email": "fabiolimasouto@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload" : {
+        "psr-0" : {
+            "FlSouto\\" : "."
+        }
+    }
+}

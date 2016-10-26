@@ -1,6 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
-require_once(__DIR__.'/../FlSouto/Pipe.php');
+require_once('vendor/autoload.php');
+
 use FlSouto\Pipe;
 
 class PipeTest extends TestCase
