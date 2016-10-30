@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-#mdx:h require
+#mdx:h autoload
 require_once('vendor/autoload.php');
 
 #mdx:h use
@@ -19,20 +19,21 @@ class PipeTest extends TestCase
     	});
 
     	$result = $pipe->run(' f4b10 ');
-    	#/mdx $result->output
+    	#/mdx echo $result->output
 
         $this->assertEquals('fabio', $result->output);
     }
 
     function testValidation(){
+    	#mdx:2
     	$pipe = new Pipe();
     	$pipe->add(function($value){
     		if(strstr($value,'4')){
     			echo 'The value cannot contain the number 4.';
     		}
-    	});
-    	
+    	});    	
     	$result = $pipe->run('f4b10');
+    	#/mdx echo $result->error
 
     	$this->assertEquals('The value cannot contain the number 4.', $result->error);
     }
@@ -50,6 +51,7 @@ class PipeTest extends TestCase
     }
 
     function testValidationRunsAfterFilter(){
+    	#mdx:3
     	$pipe = new Pipe();
     	$pipe->add(function($value){
     		return str_replace('4','a',$value);
@@ -60,10 +62,12 @@ class PipeTest extends TestCase
     		}
     	});
     	$result = $pipe->run('f4b10');
+    	#/mdx
     	$this->assertEmpty($result->error);
     }
 
     function testFallbackIsReturnedOnError(){
+    	#mdx:4
     	$pipe = new Pipe();
     	$pipe->fallback('default');
     	$pipe->add(function($value){
@@ -72,16 +76,18 @@ class PipeTest extends TestCase
     		}
     	});
     	$result = $pipe->run('');
+    	#/mdx echo $result->output
     	$this->assertEquals('default',$result->output);
     }
 
     function testCreateWithArray(){
-    	
+		#mdx:5
     	$pipe = Pipe::create([
     		'trim',
     		function($value){ return str_replace('_','/',$value); }
     	]);
-
+    	#/mdx
+    	
     	$result = $pipe->run(' flsouto_pipe ');
 
     	$result->output .= ':'.count($pipe->filters());
