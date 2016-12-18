@@ -6,6 +6,7 @@ class Pipe{
 
 	protected $filters = [];
 	protected $fallback = null;
+	protected $fallback_when = [];
 
 	function __construct(array $filters=[]){
 		if(!empty($filters)){
@@ -25,8 +26,17 @@ class Pipe{
 		return $this->filters;
 	}
 
-	function fallback($value){
+	function fallback($value,$when=[null]){
 		$this->fallback = $value;
+		$this->fallback_when = [];
+		foreach($when as $v){
+			if(ctype_digit("$v")){
+				$this->fallback_when[] = "$v";
+				$this->fallback_when[] = (int)$v;
+			} else{
+				$this->fallback_when[] = $v;
+			}
+		}
 		return $this;
 	}
 
@@ -45,6 +55,9 @@ class Pipe{
 			if(!is_null($return)){
 				$result->output = $return;
 			}
+		}
+		if(!is_null($this->fallback) && in_array($result->output, $this->fallback_when,true)){
+			$result->output = $this->fallback;
 		}
 		return $result;
 	}

@@ -80,6 +80,33 @@ class PipeTest extends TestCase
     	$this->assertEquals('default',$result->output);
     }
 
+    function testFallbackWhenNull(){
+        #mdx:4.1
+        $pipe = new Pipe();
+        $pipe->fallback('default');
+        $result = $pipe->run(null);
+        #/mdx echo $result->output
+        $this->assertEquals('default',$result->output);
+    }
+
+    function testFallbackFailsOnEmptyString(){
+        #mdx:4.2
+        $pipe = new Pipe();
+        $pipe->fallback('default');
+        $result = $pipe->run('');
+        #/mdx var_dump($result->output)
+        $this->assertEquals('',$result->output);
+    }
+
+    function testFallbackWhenCustom(){
+        #mdx:4.3
+        $pipe = new Pipe();
+        $pipe->fallback('default',[null,'',0]);
+        $result = $pipe->run('');
+        #/mdx echo $result->output
+        $this->assertEquals('default',$result->output);
+    }
+
     function testCreateWithArray(){
 		#mdx:5
     	$pipe = Pipe::create([

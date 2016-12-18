@@ -110,6 +110,58 @@ The output will be:
 default
 ```
 
+**Notice:** the fallback value is also used when the input value is null. Example:
+
+```php
+
+$pipe = new Pipe();
+$pipe->fallback('default');
+$result = $pipe->run(null);
+
+echo $result->output;
+```
+
+The output will be:
+
+```
+default
+```
+
+However this behaviour does not follow on empty strings:
+
+```php
+
+$pipe = new Pipe();
+$pipe->fallback('default');
+$result = $pipe->run('');
+
+var_dump($result->output);
+```
+
+```
+string(0) ""
+
+```
+
+### Customizing the fallback behaviour
+
+If you want, for instance, to fallback on null, empty string or zero, you have to provide the second parameter to the fallback method:
+
+```php
+
+$pipe = new Pipe();
+$pipe->fallback('default',[null,'',0]);
+$result = $pipe->run('');
+
+echo $result->output;
+```
+
+The output will be:
+
+```
+default
+```
+
 ## Alternative syntax
 
 You can use the *addArray* method to add an array of filters at once or you can instantiate the Pipe class through the *create* method which accepts an array of filters too:

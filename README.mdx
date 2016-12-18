@@ -54,6 +54,30 @@ The output will be:
 
 #mdx:4 -o
 
+**Notice:** the fallback value is also used when the input value is null. Example:
+
+#mdx:4.1 -php -h:autoload,use
+
+The output will be:
+
+#mdx:4.1 -o
+
+However this behaviour does not follow on empty strings:
+
+#mdx:4.2 -php -h:autoload,use
+
+#mdx:4.2 -o
+
+### Customizing the fallback behaviour
+
+If you want, for instance, to fallback on null, empty string or zero, you have to provide the second parameter to the fallback method:
+
+#mdx:4.3 -php -h:autoload,use
+
+The output will be:
+
+#mdx:4.3 -o
+
 ## Alternative syntax
 
 You can use the *addArray* method to add an array of filters at once or you can instantiate the Pipe class through the *create* method which accepts an array of filters too:
