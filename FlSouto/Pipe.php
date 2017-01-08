@@ -30,7 +30,7 @@ class Pipe{
 		$this->fallback = $value;
 		$this->fallback_when = [];
 		foreach($when as $v){
-			if(ctype_digit("$v")){
+			if(!is_array($v) && ctype_digit("$v")){
 				$this->fallback_when[] = "$v";
 				$this->fallback_when[] = (int)$v;
 			} else{
