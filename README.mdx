@@ -46,7 +46,13 @@ This is just to ilustrate that filters and validators can work together. Notice 
 
 ## Defining a Fallback
 
-The fallback method allows you to define a default value to be returned in case any error occurs:
+The fallback method allows you to define a default value to be returned in case any error occurs.
+The default fallback is always the input itself:
+
+#mdx:6 -php -h:autoload,use
+#mdx:6 -o
+
+Use the fallback method to change the default value:
 
 #mdx:4 -php -h:autoload,use
 

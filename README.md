@@ -50,7 +50,7 @@ $pipe->add(function($value){
 	if(strstr($value,'4')){
 		echo 'The value cannot contain the number 4.';
 	}
-});    	
+});
 $result = $pipe->run('f4b10');
 
 echo $result->error;
@@ -81,25 +81,44 @@ $pipe->add(function($value){
 });
 $result = $pipe->run('f4b10');
 
-
 ```
 
 This is just to ilustrate that filters and validators can work together. Notice the order they are applied is the same order they are added to the pipe.
 
 ## Defining a Fallback
 
-The fallback method allows you to define a default value to be returned in case any error occurs:
+The fallback method allows you to define a default value to be returned in case any error occurs.
+The default fallback is always the input itself:
+
+```php
+
+$pipe = new Pipe();
+$pipe->add(function($v){
+    iF(preg_match("/\d/",$v)){
+        echo "The value cannot contain digits.";
+    }
+});
+
+$result = $pipe->run($input="My name is 12345");
+
+echo $result->output;
+```
+```
+My name is 12345
+```
+
+Use the fallback method to change the default value:
 
 ```php
 
 $pipe = new Pipe();
 $pipe->fallback('default');
-$pipe->add(function($value){
-	if(empty($value)){
-		echo 'The value cannot be blank.';
-	}
-});
-$result = $pipe->run('');
+   $pipe->add(function($v){
+       iF(preg_match("/\d/",$v)){
+           echo "The value cannot contain digits.";
+       }
+   });
+$result = $pipe->run('My name is 12345');
 
 echo $result->output;
 ```
@@ -172,7 +191,6 @@ You can use the *addArray* method to add an array of filters at once or you can 
   		'trim',
   		function($value){ return str_replace('_','/',$value); }
   	]);
-
 
 ```
 

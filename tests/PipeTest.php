@@ -31,7 +31,7 @@ class PipeTest extends TestCase
     		if(strstr($value,'4')){
     			echo 'The value cannot contain the number 4.';
     		}
-    	});    	
+    	});
     	$result = $pipe->run('f4b10');
     	#/mdx echo $result->error
 
@@ -45,7 +45,7 @@ class PipeTest extends TestCase
     			echo 'The value cannot contain the number 4.';
     		}
     	});
-    
+
     	$result = $pipe->run('fab10');
     	$this->assertEmpty($result->error);
     }
@@ -70,12 +70,12 @@ class PipeTest extends TestCase
     	#mdx:4
     	$pipe = new Pipe();
     	$pipe->fallback('default');
-    	$pipe->add(function($value){
-    		if(empty($value)){
-    			echo 'The value cannot be blank.';
-    		}
-    	});
-    	$result = $pipe->run('');
+        $pipe->add(function($v){
+            iF(preg_match("/\d/",$v)){
+                echo "The value cannot contain digits.";
+            }
+        });
+    	$result = $pipe->run('My name is 12345');
     	#/mdx echo $result->output
     	$this->assertEquals('default',$result->output);
     }
@@ -114,12 +114,29 @@ class PipeTest extends TestCase
     		function($value){ return str_replace('_','/',$value); }
     	]);
     	#/mdx
-    	
+
     	$result = $pipe->run(' flsouto_pipe ');
 
     	$result->output .= ':'.count($pipe->filters());
 
     	$this->assertEquals('flsouto/pipe:2',$result->output);
+    }
+
+    function testFallbackDefaultsToInput(){
+
+        #mdx:6
+        $pipe = new Pipe();
+        $pipe->add(function($v){
+            iF(preg_match("/\d/",$v)){
+                echo "The value cannot contain digits.";
+            }
+        });
+
+        $result = $pipe->run($input="My name is 12345");
+        #/mdx echo $result->output
+
+        $this->assertEquals($input,$result->output);
+
     }
 
 }

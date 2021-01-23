@@ -2,7 +2,11 @@
 
 namespace FlSouto;
 
+use InvalidArgumentException;
+
 class Pipe{
+
+    CONST FALLBACK_TO_INPUT = '__FALLBACK_TO_INPUT__';
 
 	protected $filters = [];
 	protected $fallback = null;
@@ -12,6 +16,7 @@ class Pipe{
 		if(!empty($filters)){
 			$this->addArray($filters);
 		}
+		$this->fallback = self::FALLBACK_TO_INPUT;
 	}
 
 	function add($filter){
@@ -49,7 +54,7 @@ class Pipe{
 			$error = ob_get_clean();
 			if($error){
 				$result->error = $error;
-				$result->output = $this->fallback;
+				$result->output = $this->fallback == self::FALLBACK_TO_INPUT ? $input : $this->fallback;
 				break;
 			}
 			if(!is_null($return)){
@@ -57,7 +62,7 @@ class Pipe{
 			}
 		}
 		if(!is_null($this->fallback) && in_array($result->output, $this->fallback_when,true)){
-			$result->output = $this->fallback;
+			$result->output = $this->fallback == self::FALLBACK_TO_INPUT ? $input : $this->fallback;
 		}
 		return $result;
 	}
